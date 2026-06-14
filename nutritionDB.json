@@ -1,8 +1,4 @@
-const nutritionDB = {
 
-  // ======================
-  // SOUTH INDIAN BREAKFAST
-  // ======================
 
   idli:{
     aliases:["idli","rice idli"],
