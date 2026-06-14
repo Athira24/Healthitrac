@@ -1,46 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
-const nutritionTool = {
-  name: "return_nutrition",
-  description: "Return the nutritional information for the given food",
-  input_schema: {
-    type: "object",
-    properties: {
-      calories: {
-        type: "number",
-        description: "Total calories in kcal",
-      },
-      protein: {
-        type: "number",
-        description: "Protein in grams",
-      },
-      carbs: {
-        type: "number",
-        description: "Carbohydrates in grams",
-      },
-      fat: {
-        type: "number",
-        description: "Total fat in grams",
-      },
-      serving: {
-        type: "string",
-        description: "Description of the serving size",
-      },
-    },
-    required: [
-      "calories",
-      "protein",
-      "carbs",
-      "fat",
-      "serving",
-    ],
-  },
-};
-
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -48,59 +5,97 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  const { food } = req.body;
-
-  if (!food) {
-    return res.status(400).json({
-      error: "Missing food parameter",
-    });
-  }
-
   try {
-    const message = await anthropic.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 300,
-      system: `
-You are a nutrition database.
+    const { food } = req.body;
 
-Given a food name, estimate nutrition using standard nutrition references.
+    if (!food || food.trim() === "") {
+      return res.status(400).json({
+        error: "Food parameter is required",
+      });
+    }
 
-For Indian foods use Indian nutrition values.
-
-Always call the return_nutrition tool.
-
-Return nutrition for ONE serving.
-`,
-      messages: [
-        {
-          role: "user",
-          content: food,
-        },
-      ],
-      tools: [nutritionTool],
-      tool_choice: {
-        type: "any",
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+        "anthropic-version": "2023-06-01"
       },
-    });
+      body: JSON.stringify({
+        model: "claude-3-5-haiku-latest",
+        max_tokens: 300,
+        system: `
+You are a nutrition expert.
 
-    const toolUse = message.content.find(
-  (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
-);
+The user will give a food name and optionally quantity.
 
-if (!toolUse) {
-  return res.status(500).json({
-    error: "No nutrition returned",
-  });
+Return ONLY valid JSON.
+
+Example:
+
+{
+  "calories": 174,
+  "protein": 5.7,
+  "carbs": 36,
+  "fat": 0.9,
+  "serving": "3 idli"
 }
 
-return res.status(200).json(toolUse.input);
+Do not return markdown.
+Do not explain anything.
+Return JSON only.
+`,
+        messages: [
+          {
+            role: "user",
+            content: food
+          }
+        ]
+      })
+    });
 
-    
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error(result);
+
+      return res.status(response.status).json({
+        error: result
+      });
+    }
+
+    if (
+      !result.content ||
+      !Array.isArray(result.content) ||
+      result.content.length === 0
+    ) {
+      return res.status(500).json({
+        error: "No response received from Anthropic"
+      });
+    }
+
+    const text = result.content[0].text;
+
+    let nutrition;
+
+    try {
+      nutrition = JSON.parse(text);
+    } catch (e) {
+      console.error(text);
+
+      return res.status(500).json({
+        error: "Claude returned invalid JSON",
+        raw: text
+      });
+    }
+
+    return res.status(200).json(nutrition);
+
   } catch (err: any) {
     console.error(err);
 
     return res.status(500).json({
-      error: err.message || "Internal Server Error",
+      error: err.message || "Internal Server Error"
     });
   }
 }
