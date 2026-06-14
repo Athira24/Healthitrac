@@ -84,16 +84,18 @@ Return nutrition for ONE serving.
     });
 
     const toolUse = message.content.find(
-      (block: any) => block.type === "tool_use"
-    );
+  (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
+);
 
-    if (!toolUse) {
-      return res.status(500).json({
-        error: "No nutrition returned",
-      });
-    }
+if (!toolUse) {
+  return res.status(500).json({
+    error: "No nutrition returned",
+  });
+}
 
-    return res.status(200).json(toolUse.input);
+return res.status(200).json(toolUse.input);
+
+    
   } catch (err: any) {
     console.error(err);
 
