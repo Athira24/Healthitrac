@@ -1,0 +1,418 @@
+const nutritionDB = {
+
+  // ======================
+  // SOUTH INDIAN BREAKFAST
+  // ======================
+
+  idli:{
+    aliases:["idli","rice idli"],
+    unit:"piece",
+    calories:58,
+    protein:2,
+    carbs:12,
+    fat:0.3
+  },
+
+  mini_idli:{
+    aliases:["mini idli"],
+    unit:"piece",
+    calories:18,
+    protein:0.6,
+    carbs:4,
+    fat:0.1
+  },
+
+  dosa:{
+    aliases:["dosa","plain dosa"],
+    unit:"piece",
+    calories:168,
+    protein:4,
+    carbs:30,
+    fat:4
+  },
+
+  masala_dosa:{
+    aliases:["masala dosa"],
+    unit:"piece",
+    calories:387,
+    protein:8,
+    carbs:49,
+    fat:17
+  },
+
+  rava_dosa:{
+    aliases:["rava dosa"],
+    unit:"piece",
+    calories:220,
+    protein:5,
+    carbs:33,
+    fat:7
+  },
+
+  onion_dosa:{
+    aliases:["onion dosa"],
+    unit:"piece",
+    calories:210,
+    protein:5,
+    carbs:31,
+    fat:6
+  },
+
+  ghee_dosa:{
+    aliases:["ghee dosa"],
+    unit:"piece",
+    calories:250,
+    protein:5,
+    carbs:31,
+    fat:10
+  },
+
+  uttapam:{
+    aliases:["uttapam"],
+    unit:"piece",
+    calories:190,
+    protein:5,
+    carbs:32,
+    fat:5
+  },
+
+  pongal:{
+    aliases:["ven pongal","pongal"],
+    unit:"100g",
+    calories:160,
+    protein:4,
+    carbs:24,
+    fat:5
+  },
+
+  upma:{
+    aliases:["upma"],
+    unit:"100g",
+    calories:150,
+    protein:4,
+    carbs:27,
+    fat:3
+  },
+
+  poha:{
+    aliases:["poha","aval"],
+    unit:"100g",
+    calories:130,
+    protein:3,
+    carbs:25,
+    fat:2
+  },
+
+  semiya_upma:{
+    aliases:["semiya upma","vermicelli upma"],
+    unit:"100g",
+    calories:155,
+    protein:4,
+    carbs:28,
+    fat:3
+  },
+
+  // ======================
+  // KERALA BREAKFAST
+  // ======================
+
+  puttu:{
+    aliases:["puttu"],
+    unit:"100g",
+    calories:180,
+    protein:4.5,
+    carbs:39,
+    fat:0.7
+  },
+
+  appam:{
+    aliases:["appam"],
+    unit:"piece",
+    calories:120,
+    protein:2,
+    carbs:25,
+    fat:1
+  },
+
+  idiyappam:{
+    aliases:["idiyappam","string hopper"],
+    unit:"piece",
+    calories:55,
+    protein:1,
+    carbs:12,
+    fat:0.2
+  },
+
+  pathiri:{
+    aliases:["pathiri"],
+    unit:"piece",
+    calories:110,
+    protein:2,
+    carbs:23,
+    fat:0.5
+  },
+
+  kallappam:{
+    aliases:["kallappam"],
+    unit:"piece",
+    calories:135,
+    protein:2,
+    carbs:27,
+    fat:2
+  },
+
+  ney_pathal:{
+    aliases:["ney pathal"],
+    unit:"piece",
+    calories:170,
+    protein:3,
+    carbs:26,
+    fat:5
+  },
+
+  // ======================
+  // RICE
+  // ======================
+
+  white_rice:{
+    aliases:["rice","white rice"],
+    unit:"100g",
+    calories:130,
+    protein:2.7,
+    carbs:28,
+    fat:0.3
+  },
+
+  brown_rice:{
+    aliases:["brown rice"],
+    unit:"100g",
+    calories:111,
+    protein:2.6,
+    carbs:23,
+    fat:0.9
+  },
+
+  jeera_rice:{
+    aliases:["jeera rice"],
+    unit:"100g",
+    calories:170,
+    protein:3,
+    carbs:31,
+    fat:3
+  },
+
+  ghee_rice:{
+    aliases:["ghee rice"],
+    unit:"100g",
+    calories:190,
+    protein:3,
+    carbs:30,
+    fat:6
+  },
+
+  fried_rice:{
+    aliases:["fried rice"],
+    unit:"100g",
+    calories:185,
+    protein:4,
+    carbs:28,
+    fat:6
+  },
+
+  biryani:{
+    aliases:["biryani","chicken biryani"],
+    unit:"100g",
+    calories:220,
+    protein:9,
+    carbs:22,
+    fat:10
+  },
+
+  lemon_rice:{
+    aliases:["lemon rice"],
+    unit:"100g",
+    calories:180,
+    protein:3,
+    carbs:31,
+    fat:5
+  },
+
+  curd_rice:{
+    aliases:["curd rice"],
+    unit:"100g",
+    calories:145,
+    protein:4,
+    carbs:21,
+    fat:5
+  },
+
+  // ======================
+  // ROTI
+  // ======================
+
+  chapati:{
+    aliases:["chapati","roti"],
+    unit:"piece",
+    calories:120,
+    protein:3.5,
+    carbs:20,
+    fat:3
+  },
+
+  parotta:{
+    aliases:["parotta","kerala parotta"],
+    unit:"piece",
+    calories:320,
+    protein:7,
+    carbs:41,
+    fat:14
+  },
+
+  naan:{
+    aliases:["naan"],
+    unit:"piece",
+    calories:260,
+    protein:8,
+    carbs:45,
+    fat:6
+  },
+
+  poori:{
+    aliases:["poori","puri"],
+    unit:"piece",
+    calories:105,
+    protein:2,
+    carbs:13,
+    fat:5
+  },
+
+  // ======================
+  // EGGS
+  // ======================
+
+  boiled_egg:{
+    aliases:["egg","boiled egg"],
+    unit:"piece",
+    calories:70,
+    protein:6,
+    carbs:0.6,
+    fat:5
+  },
+
+  omelette:{
+    aliases:["omelette"],
+    unit:"piece",
+    calories:94,
+    protein:6.5,
+    carbs:1,
+    fat:7
+  },
+
+  fried_egg:{
+    aliases:["fried egg"],
+    unit:"piece",
+    calories:92,
+    protein:6,
+    carbs:0.5,
+    fat:7
+  },
+
+  egg_bhurji:{
+    aliases:["egg bhurji"],
+    unit:"100g",
+    calories:160,
+    protein:11,
+    carbs:3,
+    fat:11
+  },
+
+  // ======================
+  // CHICKEN
+  // ======================
+
+  chicken_breast:{
+    aliases:["chicken breast","grilled chicken"],
+    unit:"100g",
+    calories:165,
+    protein:31,
+    carbs:0,
+    fat:3.6
+  },
+
+  chicken_curry:{
+    aliases:["chicken curry"],
+    unit:"100g",
+    calories:190,
+    protein:18,
+    carbs:4,
+    fat:11
+  },
+
+  chicken_fry:{
+    aliases:["chicken fry"],
+    unit:"100g",
+    calories:260,
+    protein:25,
+    carbs:5,
+    fat:16
+  },
+
+  chicken_65:{
+    aliases:["chicken 65"],
+    unit:"100g",
+    calories:290,
+    protein:22,
+    carbs:10,
+    fat:18
+  },
+
+  // ======================
+  // FISH
+  // ======================
+
+  sardine:{
+    aliases:["mathi","sardine"],
+    unit:"100g",
+    calories:208,
+    protein:25,
+    carbs:0,
+    fat:11
+  },
+
+  mackerel:{
+    aliases:["ayala","mackerel"],
+    unit:"100g",
+    calories:205,
+    protein:19,
+    carbs:0,
+    fat:14
+  },
+
+  tuna:{
+    aliases:["tuna"],
+    unit:"100g",
+    calories:132,
+    protein:29,
+    carbs:0,
+    fat:1
+  },
+
+  salmon:{
+    aliases:["salmon"],
+    unit:"100g",
+    calories:208,
+    protein:20,
+    carbs:0,
+    fat:13
+  },
+
+  king_fish:{
+    aliases:["neymeen","king fish"],
+    unit:"100g",
+    calories:150,
+    protein:22,
+    carbs:0,
+    fat:5
+  }
+
+};
