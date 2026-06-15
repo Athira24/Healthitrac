@@ -362,6 +362,102 @@ input::placeholder{color:var(--text-tertiary)}
   </div>
 </div>
 
+<!-- FASTING -->
+
+<div id="screen-fasting" class="screen">
+
+<div class="page-header">
+<h1>Intermittent Fasting</h1>
+<p>Track your fasting window</p>
+</div>
+
+<div class="card">
+
+<div class="form-group">
+<label>Protocol</label>
+
+<select id="fastProtocol">
+<option value="12">12 : 12</option>
+<option value="14">14 : 10</option>
+<option value="16" selected>16 : 8</option>
+<option value="18">18 : 6</option>
+<option value="20">20 : 4</option>
+<option value="23">OMAD</option>
+</select>
+
+</div>
+
+<button class="btn-primary" onclick="startFast()">
+Start Fast
+</button>
+
+<button class="btn-ghost" onclick="stopFast()">
+Stop Fast
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="timer-display">
+
+<div class="t-time" id="fastTimer">
+
+00:00:00
+
+</div>
+
+<div class="t-status" id="fastStatus">
+
+Not Fasting
+
+</div>
+
+</div>
+
+<div class="progress-wrap">
+
+<div class="progress-bar">
+
+<div
+class="progress-fill green"
+id="fastProgress"
+style="width:0%">
+</div>
+
+</div>
+
+</div>
+
+<div class="row-item">
+
+<span>Current Stage</span>
+
+<strong id="fastStage">
+
+Waiting
+
+</strong>
+
+</div>
+
+<div class="row-item">
+
+<span>Remaining</span>
+
+<strong id="fastRemaining">
+
+--
+
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
 <!-- PROGRESS -->
 <div id="screen-progress" class="screen">
   <div class="page-header"><h1>Progress</h1><p>BMI, weight trend & weekly stats</p></div>
@@ -412,6 +508,9 @@ input::placeholder{color:var(--text-tertiary)}
   </div>
 </div>
 
+
+
+
 </div><!-- /screens-wrap -->
 
 <!-- Bottom Nav -->
@@ -420,6 +519,10 @@ input::placeholder{color:var(--text-tertiary)}
   <button class="nav-btn" onclick="switchScreen('meals')" aria-label="Meals"><i class="ti ti-salad" aria-hidden="true"></i>Meals</button>
   <button class="nav-btn" onclick="switchScreen('workout')" aria-label="Workout"><i class="ti ti-barbell" aria-hidden="true"></i>Workout</button>
   <button class="nav-btn" onclick="switchScreen('water')" aria-label="Water"><i class="ti ti-droplet" aria-hidden="true"></i>Water</button>
+  <button class="nav-btn" onclick="switchScreen('fasting')">
+    <i class="ti ti-clock-hour-4"></i>
+    Fasting
+</button>
   <button class="nav-btn" onclick="switchScreen('progress')" aria-label="Progress"><i class="ti ti-chart-line" aria-hidden="true"></i>Progress</button>
 </nav>
 </div>
@@ -465,18 +568,23 @@ input::placeholder{color:var(--text-tertiary)}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const SCREENS = ['home','meals','workout','water','progress'];
+const SCREENS = ['home','meals','workout','fasting','water','progress'];
 const MET = { Strength:5, Cardio:8, HIIT:10, Yoga:3, Walking:3.5, Cycling:7, Swimming:8 };
 
 let state = {
   meals:[], exercises:[], weights:[], glasses:0,
   timerSec:0, timerRunning:false, setsDone:{},
-  profile:null, calGoal:1600
+  profile:null, calGoal:1600,
+  fasting:{
+    running:false,
+    start:null,
+    hours:16
+},
 };
 let timerInterval = null;
 let weightChartInst = null, calChartInst = null;
 let lookupBase = null;
-
+let fastingInterval = null;
 function loadState(){
   try{ const r=localStorage.getItem('fittrack_v2'); if(r) Object.assign(state,JSON.parse(r)); }catch(e){}
 }
@@ -953,6 +1061,120 @@ updateDashboard();
 renderMeals();
 renderExercises();
 renderWater();
+if(state.fasting.running){
+
+    fastingInterval=setInterval(updateFasting,1000);
+
+    updateFasting();
+
+}
+
+function startFast(){
+
+    clearInterval(fastingInterval);
+
+    state.fasting.running=true;
+
+    state.fasting.start=Date.now();
+
+    state.fasting.hours=parseInt(
+        document.getElementById("fastProtocol").value
+    );
+
+    saveState();
+
+    updateFasting();
+    
+    fastingInterval=setInterval(updateFasting,1000);
+
+}
+function stopFast(){
+
+    state.fasting.running=false;
+
+    clearInterval(fastingInterval);
+    fastingInterval = null;
+    document.getElementById("fastStatus").innerHTML="Not Fasting";
+
+    document.getElementById("fastTimer").innerHTML="00:00:00";
+
+    document.getElementById("fastProgress").style.width="0%";
+
+    document.getElementById("fastStage").innerHTML="Waiting";
+
+    document.getElementById("fastRemaining").innerHTML="--";
+
+    saveState();
+
+}
+function updateFasting(){
+
+if(!state.fasting.running)
+return;
+
+const elapsed=(Date.now()-state.fasting.start)/1000;
+
+const total=state.fasting.hours*3600;
+
+const remain=Math.max(0,total-elapsed);
+
+const h=Math.floor(elapsed/3600);
+
+const m=Math.floor((elapsed%3600)/60);
+
+const s=Math.floor(elapsed%60);
+
+document.getElementById("fastTimer").innerHTML=
+
+`${String(h).padStart(2,'0')}:${
+String(m).padStart(2,'0')}:${
+String(s).padStart(2,'0')}`;
+
+const rh=Math.floor(remain/3600);
+
+const rm=Math.floor((remain%3600)/60);
+
+document.getElementById("fastRemaining").innerHTML=
+
+`${rh}h ${rm}m`;
+
+document.getElementById("fastStatus").innerHTML="🔥 Fasting";
+
+const percent=Math.min(
+100,
+elapsed/total*100
+);
+
+document.getElementById("fastProgress").style.width=percent+"%";
+
+let stage="Digesting";
+
+if(h>=4)
+stage="Fat Burning";
+
+if(h>=12)
+stage="Ketosis";
+
+if(h>=16)
+stage="Autophagy";
+
+document.getElementById("fastStage").innerHTML=stage;
+
+if(remain<=0){
+
+document.getElementById("fastStatus").innerHTML=
+
+"✅ Fast Complete";
+
+clearInterval(fastingInterval);
+
+state.fasting.running=false;
+
+saveState();
+
+}
+
+}
 </script>
 </body>
 </html>
