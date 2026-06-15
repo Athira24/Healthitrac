@@ -334,5 +334,137 @@
   "protein": 4,
   "carbs": 15,
   "fat": 1
+},
+  "tomato_curry": {
+  "aliases": [
+    "tomato curry",
+    "thakkali curry",
+    "tomato gravy",
+    "tomato masala"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 75,
+  "protein": 2,
+  "carbs": 10,
+  "fat": 3
+},
+
+"tomato": {
+  "aliases": [
+    "tomato",
+    "thakkali"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 18,
+  "protein": 0.9,
+  "carbs": 3.9,
+  "fat": 0.2
+},
+
+"sambar": {
+  "aliases": [
+    "sambar",
+    "sambhar"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 65,
+  "protein": 3,
+  "carbs": 10,
+  "fat": 1.5
+},
+
+"rasam": {
+  "aliases": [
+    "rasam"
+  ],
+  "unit": "100ml",
+  "baseQuantity": 100,
+  "calories": 30,
+  "protein": 1,
+  "carbs": 5,
+  "fat": 0.5
+},
+
+"vegetable_curry": {
+  "aliases": [
+    "vegetable curry",
+    "veg curry",
+    "mixed vegetable curry"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 90,
+  "protein": 3,
+  "carbs": 12,
+  "fat": 3
+},
+
+"dal_curry": {
+  "aliases": [
+    "dal",
+    "dal curry",
+    "lentil curry"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 116,
+  "protein": 7,
+  "carbs": 20,
+  "fat": 1
+},
+
+"potato_curry": {
+  "aliases": [
+    "potato curry",
+    "urulakizhangu curry",
+    "aloo curry"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 105,
+  "protein": 2,
+  "carbs": 17,
+  "fat": 3
+},
+
+"beans_thoran": {
+  "aliases": [
+    "beans thoran",
+    "beans stir fry"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 92,
+  "protein": 3,
+  "carbs": 10,
+  "fat": 4
+},
+
+"cabbage_thoran": {
+  "aliases": [
+    "cabbage thoran",
+    "cabbage stir fry"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 88,
+  "protein": 2,
+  "carbs": 9,
+  "fat": 4
+},
+
+"avial": {
+  "aliases": [
+    "avial"
+  ],
+  "unit": "100g",
+  "baseQuantity": 100,
+  "calories": 120,
+  "protein": 3,
+  "carbs": 10,
+  "fat": 8
 }
 }
