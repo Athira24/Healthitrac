@@ -1,6 +1,7 @@
 import nutritionDB from "../nutritionDB.json";
 
 export default async function handler(req: any, res: any) {
+  // Allow only POST
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method Not Allowed",
@@ -16,58 +17,66 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    const search = food.toLowerCase().trim();
+    const search = String(food).toLowerCase().trim();
+
+    console.log("Searching for:", search);
+
+    const db = nutritionDB as Record<string, any>;
 
     let item: any = null;
 
-    for (const key in nutritionDB) {
-      const current: any = (nutritionDB as any)[key];
+    // Search through all foods
+    for (const [key, value] of Object.entries(db)) {
 
-      const aliasMatched = current.aliases.some((alias: string) => {
-  const aliasLower = alias.toLowerCase();
+      const aliases: string[] = value.aliases || [];
 
-  return (
-    search === aliasLower ||
-    search.includes(aliasLower) ||
-    aliasLower.includes(search)
-  );
-});
+      const matched =
+        key.toLowerCase() === search ||
+        search.includes(key.toLowerCase()) ||
+        aliases.some(alias => {
+          const a = alias.toLowerCase();
+          return (
+            a === search ||
+            search.includes(a) ||
+            a.includes(search)
+          );
+        });
 
-const keyMatched =
-  key.toLowerCase() === search ||
-  search.includes(key.toLowerCase());
-
-if (keyMatched || aliasMatched) {
-  item = current;
-  break;
-}
+      if (matched) {
+        item = value;
+        console.log("Matched:", key);
+        break;
       }
     }
 
     if (!item) {
+      console.log("Food not found:", search);
+
       return res.status(404).json({
-        error: "Food not found",
+        error: `Food '${food}' not found`
       });
     }
 
-    let multiplier = quantity;
+    let multiplier = Number(quantity);
 
-    // Foods measured per 100g or 100ml
+    // Calculate multiplier for 100g / 100ml foods
     if (
       item.baseQuantity === 100 &&
       (item.unit === "g" || item.unit === "ml")
     ) {
-      multiplier = quantity / 100;
+      multiplier = Number(quantity) / 100;
     }
 
     const result = {
-      calories: +(item.calories * multiplier).toFixed(1),
-      protein: +(item.protein * multiplier).toFixed(1),
-      carbs: +(item.carbs * multiplier).toFixed(1),
-      fat: +(item.fat * multiplier).toFixed(1),
+      food,
       serving: `${quantity} ${item.unit}`,
-      food: food,
+      calories: Number((item.calories * multiplier).toFixed(1)),
+      protein: Number((item.protein * multiplier).toFixed(1)),
+      carbs: Number((item.carbs * multiplier).toFixed(1)),
+      fat: Number((item.fat * multiplier).toFixed(1))
     };
+
+    console.log(result);
 
     return res.status(200).json(result);
 
@@ -75,7 +84,7 @@ if (keyMatched || aliasMatched) {
     console.error(err);
 
     return res.status(500).json({
-      error: err.message,
+      error: err.message || "Internal Server Error"
     });
   }
 }
