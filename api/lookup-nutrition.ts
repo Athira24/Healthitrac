@@ -23,14 +23,24 @@ export default async function handler(req: any, res: any) {
     for (const key in nutritionDB) {
       const current: any = (nutritionDB as any)[key];
 
-      if (
-        key.toLowerCase() === search ||
-        current.aliases.some((alias: string) =>
-          search.includes(alias.toLowerCase())
-        )
-      ) {
-        item = current;
-        break;
+      const aliasMatched = current.aliases.some((alias: string) => {
+  const aliasLower = alias.toLowerCase();
+
+  return (
+    search === aliasLower ||
+    search.includes(aliasLower) ||
+    aliasLower.includes(search)
+  );
+});
+
+const keyMatched =
+  key.toLowerCase() === search ||
+  search.includes(key.toLowerCase());
+
+if (keyMatched || aliasMatched) {
+  item = current;
+  break;
+}
       }
     }
 
